@@ -192,7 +192,11 @@
         <unzip src="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/framework/royale-framework-parent/${release.version}/royale-framework-parent-${release.version}-source-release.zip" dest="${artifactfolder}/sources" >
             <cutdirsmapper dirs="1" />
         </unzip>
-        
+	<!-- Maven release plugin causes Jewel's defaults.css to go wrong and this seems to fix it ( at least on windows ) TODO change Step 11 on CI so this does not need to be applied -->
+	<!-- Although changing sass files' line endings to dos at this stage seems to fix this, I have not seen CRLF endings on the CI server's files, so I am not sure why this works. Needs further investigation. Yishay -->
+        <fixcrlf srcdir="${artifactfolder}/sources/frameworks/projects/Jewel" eol="dos" fixlast="false">
+		<include name="**/*.sass"/>
+        </fixcrlf>
         <!-- build these modules -->
         <exec executable="${mvn}" dir="${artifactfolder}/sources" failonerror="true" >
             <arg value="-X" />
